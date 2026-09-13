@@ -1,1 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Hardening with Lynis - Asep Nurdin</title>
+    <link rel="stylesheet" href="/asepnurdin-portfolio/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-detail { padding: 100px 0; background: var(--bg-primary); }
+        .detail-header { 
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+            padding: 60px 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .detail-header .section-tag {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .detail-header .hero-title {
+            font-size: 3.2em;
+            margin: 15px 0;
+            letter-spacing: -1px;
+        }
+        .detail-header .hero-subtitle {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        .client-logos {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px auto 40px;
+            flex-wrap: wrap;
+            max-width: 900px;
+        }
+        .logo-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 220px;
+            max-width: 300px;
+        }
+        .logo-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+        .logo-security { background: linear-gradient(135deg, #10b981, #059669); }
+        .logo-linux { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .logo-company { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .logo-text { text-align: left; flex: 1; min-width: 0; }
+        .logo-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .logo-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 40px auto 0;
+            max-width: 1000px;
+        }
+        .info-box {
+            background: rgba(10, 10, 10, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .info-box:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            background: rgba(10, 10, 10, 0.8);
+        }
+        .info-box-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .info-box-value {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .info-box-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+        .score-card {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            min-width: 200px;
+        }
+        .score-card.before { border-color: #ef4444; }
+        .score-card.after { border-color: #10b981; }
+        .score-number {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .score-card.before .score-number { color: #ef4444; }
+        .score-card.after .score-number { color: #10b981; }
+        .score-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .improvement {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+            padding: 30px;
+            border-radius: 16px;
+            border: 2px solid #10b981;
+            margin: 40px 0;
+            text-align: center;
+        }
+        .improvement h3 {
+            color: #10b981;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .phase-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            border-left: 4px solid var(--accent);
+        }
+        .phase-card h3 {
+            color: var(--accent-light);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .code-block {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid var(--border);
+        }
+        .warning-box {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-left: 4px solid #eab308;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning-box strong { color: #eab308; }
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success-box strong { color: #10b981; }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: var(--bg-hover);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--border);
+        }
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:hover { background: var(--bg-hover); }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li {
+            padding: 12px 0 12px 35px;
+            position: relative;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .checklist li.checked:before {
+            content: "☑";
+            color: #10b981;
+        }
+        .topology-diagram {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin: 30px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .detail-header { padding: 40px 20px !important; }
+            .detail-header .hero-title { font-size: 1.8em !important; }
+            .info-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .score-display { flex-direction: column; gap: 20px; }
+        }
+        @media (max-width: 480px) {
+            .info-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
 
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/asepnurdin-portfolio/" class="logo">AN<span class="dot">.</span></a>
+            <ul class="nav-menu">
+                <li><a href="/asepnurdin-portfolio/#projects">Back to Projects</a></li>
+                <li><a href="/asepnurdin-portfolio/#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="project-detail">
+        <div class="container">
+            
+            <!-- Header Section -->
+            <div class="detail-header">
+                <span class="section-tag">Project Documentation</span>
+                <h1 class="hero-title">Server Hardening with Lynis</h1>
+                <p class="hero-subtitle">System Security Audit & Remediation</p>
+                
+                <div class="client-logos">
+                    <div class="logo-card">
+                        <div class="logo-icon logo-security">🔒</div>
+                        <div class="logo-text">
+                            <div class="logo-label">Category</div>
+                            <div class="logo-name">Cybersecurity</div>
+                        </div>
+                    </div>
+                    <div class="logo-card">
+                        <div class="logo-icon logo-linux">🐧</div>
+                        <div class="logo-text">
+                            <div class="logo-label">Platform</div>
+                            <div class="logo-name">Ubuntu 22.04 LTS</div>
+                        </div>
+                    </div>
+                    <div class="logo-card">
+                        <div class="logo-icon logo-company">🛡️</div>
+                        <div class="logo-text">
+                            <div class="logo-label">Tool</div>
+                            <div class="logo-name">Lynis 3.0.8</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="info-box-label">OS</div>
+                        <div class="info-box-value">Ubuntu 22.04.3</div>
+                        <div class="info-box-sub">Server LTS</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Server</div>
+                        <div class="info-box-value">srv-prod-01</div>
+                        <div class="info-box-sub">192.168.10.50</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Before</div>
+                        <div class="info-box-value">55/100</div>
+                        <div class="info-box-sub">Hardening Index</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">After</div>
+                        <div class="info-box-value">87/100</div>
+                        <div class="info-box-sub">Hardening Index</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Improvement</div>
+                        <div class="info-box-value">+58%</div>
+                        <div class="info-box-sub">Score Increase</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Date</div>
+                        <div class="info-box-value">Sep 2026</div>
+                        <div class="info-box-sub">Implementation</div>
+                    </div>
+                </div>
+
+                <div class="score-display">
+                    <div class="score-card before">
+                        <div class="score-number">55</div>
+                        <div class="score-label">Before Hardening<br>❌ Below Target</div>
+                    </div>
+                    <div class="score-card after">
+                        <div class="score-number">87</div>
+                        <div class="score-label">After Hardening<br>✅ Target Achieved</div>
+                    </div>
+                </div>
+
+                <div class="improvement">
+                    <h3>🎯 Target Achieved: +32 Points Improvement</h3>
+                    <p style="font-size: 1.1em; color: var(--text-secondary);">
+                        Hardening Index increased from 55 to 87, exceeding the minimum target of 80.<br>
+                        Server is now production-ready with significantly improved security posture.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 01 Background & Objectives -->
+            <section class="section">
+                <h2>01 — Background & Objectives</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Background</h3>
+                <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 20px;">
+                    Servers are critical assets in IT infrastructure. Default OS configurations are often insecure for production environments.
+                </p>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Rising cyber threats targeting Linux infrastructure
+                    </li>
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Compliance requirements (CIS Benchmark, ISO 27001)
+                    </li>
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Default Ubuntu configuration still has many vulnerabilities
+                    </li>
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Need for periodic audits to maintain security posture
+                    </li>
+                </ul>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">🎯 Hardening Objectives</h3>
+                <div class="phase-card">
+                    <h3>Identify Weaknesses</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Identify server configuration weaknesses through comprehensive security audit.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Increase Hardening Index</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Increase Lynis Hardening Index from baseline ~55 to ≥ 80.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Strengthen Authentication</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Strengthen authentication & remote access security.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Secure System</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Secure kernel, network & file system configurations.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Documentation</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Document the process for audit trail and compliance.</p>
+                </div>
+            </section>
+
+            <!-- 02 About Lynis -->
+            <section class="section">
+                <h2>02 — About Lynis</h2>
+                <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 30px;">
+                    Lynis is an open-source security auditing tool for Unix-based systems that performs system health scanning, vulnerability profiling, and compliance testing.
+                </p>
+
+                <div class="info-grid" style="margin-top: 30px;">
+                    <div class="info-box">
+                        <div class="info-box-label">🛡️</div>
+                        <div class="info-box-value">Security Scanner</div>
+                        <div class="info-box-sub">Checks system configuration against security best practices</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">📊</div>
+                        <div class="info-box-value">Hardening Index</div>
+                        <div class="info-box-sub">Provides a 0–100 score as a measure of security level</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">✅</div>
+                        <div class="info-box-value">Compliance</div>
+                        <div class="info-box-sub">Supports CIS Benchmark, ISO 27001, HIPAA, PCI-DSS</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">Lynis Scan Output Components</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Meaning</th>
+                            <th>Action Required</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: #ef4444;">WARNING</strong></td>
+                            <td>High-risk finding</td>
+                            <td>Must be addressed immediately</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #eab308;">SUGGESTION</strong></td>
+                            <td>Improvement recommendation</td>
+                            <td>Recommended to fix</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #3b82f6;">INFO</strong></td>
+                            <td>Configuration information</td>
+                            <td>For reference only</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #10b981;">OK</strong></td>
+                            <td>Configuration is secure</td>
+                            <td>No action needed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 03 Work Environment -->
+            <section class="section">
+                <h2>03 — Work Environment</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Server Specifications</h3>
+                <table class="comparison-table">
+                    <tbody>
+                        <tr><td><strong>OS</strong></td><td>Ubuntu Server 22.04.3 LTS</td></tr>
+                        <tr><td><strong>Kernel</strong></td><td>5.15.0-generic (amd64)</td></tr>
+                        <tr><td><strong>CPU</strong></td><td>2 vCPU</td></tr>
+                        <tr><td><strong>RAM</strong></td><td>4 GB</td></tr>
+                        <tr><td><strong>Storage</strong></td><td>40 GB SSD</td></tr>
+                        <tr><td><strong>IP Address</strong></td><td>192.168.10.50</td></tr>
+                        <tr><td><strong>Hostname</strong></td><td>srv-prod-01</td></tr>
+                        <tr><td><strong>Role</strong></td><td>Web Server (Nginx)</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📐 Lab Topology</h3>
+                <div class="topology-diagram">
+┌─────────────────────────────────────┐
+│        ADMINISTRATOR LAPTOP         │
+│        192.168.10.10                │
+│        [SSH Client]                 │
+──────────────┬──────────────────────┘
+               │ SSH (port 22)
+               │
+┌──────────────▼──────────────────────┐
+│         UBUNTU SERVER               │
+│         192.168.10.50               │
+│         srv-prod-01                 │
+│         ┌─────────────────┐         │
+│         │ Nginx :80/:443  │         │
+│         │ SSH   :22       │         │
+│         │ Lynis (audit)   │         │
+│         ─────────────────┘         │
+─────────────────────────────────────┘
+                </div>
+            </section>
+
+            <!-- 04 Phase 1: Preparation -->
+            <section class="section">
+                <h2>04 — Phase 1: Preparation</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Installing Lynis</h3>
+                <div class="phase-card">
+                    <h3>1. System Update</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# apt update && apt upgrade -y
+root@srv-prod-01:~# apt install -y curl wget gnupg2 software-properties-common
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>2. Install Lynis via Package Manager</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# apt install -y lynis
+root@srv-prod-01:~# lynis --version
+# Output: Lynis 3.0.8
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>3. Backup & System Snapshot</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# cp /etc/lynis/default.prf /etc/lynis/custom.prf
+root@srv-prod-01:~# cp /etc/ssh/sshd_config /root/lynis-backup/sshd_config.before
+root@srv-prod-01:~# cp /etc/sysctl.conf /root/lynis-backup/sysctl.conf.before
+root@srv-prod-01:~# cp /etc/login.defs /root/lynis-backup/login.defs.before
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>️ Risk Mitigation:</strong> Ensure console access (not only SSH), prepare rollback plan, test in staging environment first, and keep an active SSH session open during changes.
+                </div>
+            </section>
+
+            <!-- 05 Phase 2: Execution -->
+            <section class="section">
+                <h2>05 — Phase 2: Execution — Initial Audit</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Running Lynis Audit</h3>
+                <div class="phase-card">
+                    <h3>System Audit Command</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# lynis audit system
+# For non-interactive mode:
+root@srv-prod-01:~# lynis audit system --quick --no-colors
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Generate Full Report</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# lynis audit system --pentest --report-file /root/lynis-report-before.txt
+# Log output: /var/log/lynis.log
+# Report output: /var/log/lynis-report.dat
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📊 Initial Scan Results — Baseline</h3>
+                <div class="score-display">
+                    <div class="score-card before" style="min-width: 150px;">
+                        <div class="score-number">55</div>
+                        <div class="score-label">Hardening Index<br>⚠️ Below Target</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Findings Summary</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: #ef4444;">Warnings</strong></td>
+                            <td>18</td>
+                            <td>Immediate action required</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #eab308;">Suggestions</strong></td>
+                            <td>32</td>
+                            <td>Recommended to fix</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #3b82f6;">Manual Checks</strong></td>
+                            <td>5</td>
+                            <td>Manual verification needed</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #10b981;">Passed Tests</strong></td>
+                            <td>112</td>
+                            <td>Already compliant</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <strong>🚨 Critical Findings:</strong> SSH allows root login & password authentication, Kernel parameters not hardened, Password policy too weak, UFW firewall inactive.
+                </div>
+            </section>
+
+            <!-- 06 Action Plans -->
+            <section class="section">
+                <h2>06 — Action Plans & Remediation</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">🔐 Action 1: SSH Hardening</h3>
+                <div class="phase-card">
+                    <h3>Backup Configuration</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# cp /etc/ssh/sshd_config /root/lynis-backup/sshd_config.$(date +%F)
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Configure /etc/ssh/sshd_config</h3>
+                    <div class="code-block">
+# Disable root login & password auth
+PermitRootLogin no
+PasswordAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+
+# Use key-based auth only
+PubkeyAuthentication yes
+AuthenticationMethods publickey
+
+# Restrict SSH users
+AllowUsers admin deployer
+
+# Change default port
+Port 2222
+
+# Session & security
+LoginGraceTime 30
+MaxAuthTries 3
+ClientAliveInterval 300
+ClientAliveCountMax 2
+X11Forwarding no
+AllowTcpForwarding no
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Restart Service</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# sshd -t  # Test configuration
+root@srv-prod-01:~# systemctl restart ssh
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">🛡️ Action 2: Kernel & Network Hardening</h3>
+                <div class="phase-card">
+                    <h3>Configure /etc/sysctl.conf</h3>
+                    <div class="code-block">
+# Disable IP forwarding
+net.ipv4.ip_forward = 0
+
+# Anti IP spoofing
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+
+# Disable ICMP redirect
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+
+# SYN flood protection
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 2048
+
+# Disable IPv6
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+
+# Log suspicious packets
+net.ipv4.conf.all.log_martians = 1
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Apply Configuration</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# sysctl -p
+root@srv-prod-01:~# sysctl --system
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">🔑 Action 3: Password Policy</h3>
+                <div class="phase-card">
+                    <h3>Configure /etc/login.defs</h3>
+                    <div class="code-block">
+PASS_MAX_DAYS   90
+PASS_MIN_DAYS   1
+PASS_WARN_AGE   14
+PASS_MIN_LEN    14
+UMASK           027
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Install & Configure libpam-pwquality</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# apt install -y libpam-pwquality
+# /etc/security/pwquality.conf
+minlen = 14
+dcredit = -1
+ucredit = -1
+lcredit = -1
+ocredit = -1
+enforcing = 1
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📁 Action 4: File Permissions & Firewall</h3>
+                <div class="phase-card">
+                    <h3>Fix Critical File Permissions</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# chmod 644 /etc/passwd
+root@srv-prod-01:~# chmod 640 /etc/shadow
+root@srv-prod-01:~# chmod 600 /etc/gshadow
+root@srv-prod-01:~# chmod 700 /root
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Configure UFW Firewall</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# ufw default deny incoming
+root@srv-prod-01:~# ufw default allow outgoing
+root@srv-prod-01:~# ufw allow 2222/tcp comment 'SSH-hardened'
+root@srv-prod-01:~# ufw allow 80/tcp comment 'HTTP'
+root@srv-prod-01:~# ufw allow 443/tcp comment 'HTTPS'
+root@srv-prod-01:~# ufw --force enable
+                    </div>
+                </div>
+            </section>
+
+            <!-- 07 Phase 3: Verification -->
+            <section class="section">
+                <h2>07 — Phase 3: Verification</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Re-Scan with Lynis</h3>
+                <div class="phase-card">
+                    <h3>Run Lynis Audit Again</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# lynis audit system --pentest --report-file /root/lynis-report-after.txt
+                    </div>
+                </div>
+                <div class="phase-card">
+                    <h3>Compare Before & After</h3>
+                    <div class="code-block">
+root@srv-prod-01:~# grep "hardening_index" /var/log/lynis-report.dat
+# Before: hardening_index=55
+# After:  hardening_index=87
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📈 Results: Before vs After</h3>
+                <div class="score-display">
+                    <div class="score-card before">
+                        <div class="score-number">55</div>
+                        <div class="score-label">Before<br>18 Warnings<br>32 Suggestions</div>
+                    </div>
+                    <div class="score-card after">
+                        <div class="score-number">87</div>
+                        <div class="score-label">After<br>3 Warnings<br>8 Suggestions</div>
+                    </div>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Before</th>
+                            <th>After</th>
+                            <th>Delta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Hardening Index</strong></td>
+                            <td>55</td>
+                            <td>87</td>
+                            <td style="color: #10b981; font-weight: bold;">+32 (+58%)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Warnings</strong></td>
+                            <td>18</td>
+                            <td>3</td>
+                            <td style="color: #10b981; font-weight: bold;">-15</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Suggestions</strong></td>
+                            <td>32</td>
+                            <td>8</td>
+                            <td style="color: #10b981; font-weight: bold;">-24</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tests Passed</strong></td>
+                            <td>112</td>
+                            <td>148</td>
+                            <td style="color: #10b981; font-weight: bold;">+36</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success-box">
+                    <strong>✅ Target Achieved!</strong> Hardening Index of 87 has exceeded the minimum target of 80. The server is ready for production with significantly improved security posture.
+                </div>
+            </section>
+
+            <!-- 08 Conclusion -->
+            <section class="section">
+                <h2>08 — Conclusion & Lessons Learned</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">✅ Achievements</h3>
+                <ul class="checklist">
+                    <li class="checked">Hardening Index increased by 58% (55 → 87)</li>
+                    <li class="checked">Warnings reduced from 18 → 3</li>
+                    <li class="checked">SSH successfully hardened with key-based auth</li>
+                    <li class="checked">Kernel parameters aligned with best practices</li>
+                    <li class="checked">Firewall active with default deny policy</li>
+                    <li class="checked">Password policy strengthened via PAM</li>
+                    <li class="checked">Complete audit trail documentation</li>
+                </ul>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📝 Lessons Learned</h3>
+                <ul class="checklist">
+                    <li class="checked">Backup is mandatory — before any changes</li>
+                    <li class="checked">Test SSH config in a separate session</li>
+                    <li class="checked">Lynis provides a clear remediation roadmap</li>
+                    <li class="checked">Hardening should be incremental, not all at once</li>
+                    <li class="checked">Post-hardening monitoring is equally important</li>
+                    <li class="checked">Document every change for audit purposes</li>
+                </ul>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">🚀 Further Recommendations</h3>
+                <div class="info-grid" style="margin-top: 30px;">
+                    <div class="info-box">
+                        <div class="info-box-label">🔄</div>
+                        <div class="info-box-value">Scheduled Scans</div>
+                        <div class="info-box-sub">Schedule weekly Lynis scans via cron</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">📊</div>
+                        <div class="info-box-value">Centralized Logging</div>
+                        <div class="info-box-sub">Integrate with SIEM (Wazuh/ELK)</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">🎯</div>
+                        <div class="info-box-value">Target 95+</div>
+                        <div class="info-box-sub">Continue hardening for score above 95</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Closing -->
+            <section class="section">
+                <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 2px solid var(--border);">
+                    <h2 style="color: var(--accent-light); margin-bottom: 20px;">🛡️ Thank You</h2>
+                    <p style="font-size: 1.2em; color: var(--text-secondary); font-style: italic; margin-bottom: 30px;">
+                        "Security is a process, not a product." — Bruce Schneier
+                    </p>
+                    
+                    <div style="background: var(--bg-card); padding: 30px; border-radius: 12px; border: 1px solid var(--border); margin: 30px auto; max-width: 600px;">
+                        <h3 style="color: var(--accent-light); margin-bottom: 20px;">📄 Portfolio Documentation</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.8; text-align: left;">
+                            <strong>Topic:</strong> Server Hardening with Lynis<br>
+                            <strong>Platform:</strong> Ubuntu Server 22.04 LTS<br>
+                            <strong>Tools:</strong> Lynis 3.0.8, UFW, fail2ban, sysctl<br>
+                            <strong>Result:</strong> Hardening Index 55 → 87 (+58%)<br>
+                            <strong>Date:</strong> September 14, 2026
+                        </p>
+                    </div>
+
+                    <p style="color: var(--text-muted); margin-top: 40px;">
+                        🔒 Security First  |  🐧 Linux Hardening  |  📋 Compliance Ready
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">© 2026 Asep Nurdin. IT Infrastructure & Network Security.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
