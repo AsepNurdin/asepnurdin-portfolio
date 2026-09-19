@@ -1,1 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortigate NGFW Security Policies - Asep Nurdin</title>
+    <link rel="stylesheet" href="/asepnurdin-portfolio/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-detail { padding: 100px 0; background: var(--bg-primary); }
+        .detail-header { 
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+            padding: 60px 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .detail-header .section-tag {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .detail-header .hero-title {
+            font-size: 3.2em;
+            margin: 15px 0;
+            letter-spacing: -1px;
+        }
+        .detail-header .hero-subtitle {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+        .client-logos {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px auto 40px;
+            flex-wrap: wrap;
+            max-width: 900px;
+        }
+        .logo-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 220px;
+            max-width: 300px;
+        }
+        .logo-card:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+        .logo-client { background: linear-gradient(135deg, #0F3460, #00D2FF); }
+        .logo-fortinet { background: linear-gradient(135deg, #ee1c25, #ff6b6b); }
+        .logo-security { background: linear-gradient(135deg, #10b981, #059669); }
+        .logo-text { text-align: left; flex: 1; min-width: 0; }
+        .logo-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .logo-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 40px auto 0;
+            max-width: 1000px;
+        }
+        .info-box {
+            background: rgba(10, 10, 10, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .info-box:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            background: rgba(10, 10, 10, 0.8);
+        }
+        .info-box-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .info-box-value {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .info-box-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            color: var(--accent-light);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .phase-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            border-left: 4px solid var(--accent);
+        }
+        .phase-card h3 {
+            color: var(--accent-light);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        .code-block {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid var(--border);
+        }
+        .warning-box {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-left: 4px solid #eab308;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning-box strong { color: #eab308; }
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success-box strong { color: #10b981; }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .comparison-table th {
+            background: var(--bg-hover);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--border);
+        }
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:hover { background: var(--bg-hover); }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li {
+            padding: 12px 0 12px 35px;
+            position: relative;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        .checklist li:before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .checklist li.checked:before {
+            content: "☑";
+            color: #10b981;
+        }
+        .topology-diagram {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin: 30px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .policy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.9em;
+        }
+        .policy-table th {
+            background: var(--bg-hover);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-light);
+            border-bottom: 2px solid var(--border);
+        }
+        .policy-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .policy-table tr:last-child td { border-bottom: none; }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .badge-allow { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-deny { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        @media (max-width: 768px) {
+            .detail-header { padding: 40px 20px !important; }
+            .detail-header .hero-title { font-size: 1.8em !important; }
+            .info-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .security-features { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 480px) {
+            .info-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
 
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/asepnurdin-portfolio/" class="logo">AN<span class="dot">.</span></a>
+            <ul class="nav-menu">
+                <li><a href="/asepnurdin-portfolio/#projects">Back to Projects</a></li>
+                <li><a href="/asepnurdin-portfolio/#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="project-detail">
+        <div class="container">
+            
+            <!-- Header Section -->
+            <div class="detail-header">
+                <span class="section-tag">Project Documentation</span>
+                <h1 class="hero-title">Fortigate NGFW Security Policies</h1>
+                <p class="hero-subtitle">Next-Generation Firewall Implementation & Security Policy Configuration</p>
+                
+                <div class="client-logos">
+                    <div class="logo-card">
+                        <div class="logo-icon logo-client">PT</div>
+                        <div class="logo-text">
+                            <div class="logo-label">Client</div>
+                            <div class="logo-name">PT Autocomp System Indonesia</div>
+                        </div>
+                    </div>
+                    <div class="logo-card">
+                        <div class="logo-icon logo-fortinet">FG</div>
+                        <div class="logo-text">
+                            <div class="logo-label">Vendor</div>
+                            <div class="logo-name">Fortinet Fortigate</div>
+                        </div>
+                    </div>
+                    <div class="logo-card">
+                        <div class="logo-icon logo-security">🔒</div>
+                        <div class="logo-text">
+                            <div class="logo-label">Category</div>
+                            <div class="logo-name">Network Security</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="info-box-label">Firewall Model</div>
+                        <div class="info-box-value">FortiGate 60F</div>
+                        <div class="info-box-sub">Next-Gen Firewall</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Firmware</div>
+                        <div class="info-box-value">v7.2.x</div>
+                        <div class="info-box-sub">FortiOS</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Security Policies</div>
+                        <div class="info-box-value">24 Rules</div>
+                        <div class="info-box-sub">Configured</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">UTM Profiles</div>
+                        <div class="info-box-value">8 Profiles</div>
+                        <div class="info-box-sub">Active</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Threat Protection</div>
+                        <div class="info-box-value">Enabled</div>
+                        <div class="info-box-sub">IPS/AV/WAF</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Date</div>
+                        <div class="info-box-value">Sep 2026</div>
+                        <div class="info-box-sub">Implementation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 01 Background & Objectives -->
+            <section class="section">
+                <h2>01 — Background & Objectives</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Background</h3>
+                <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 20px;">
+                    Traditional firewalls are no longer sufficient against modern cyber threats. Next-Generation Firewall (NGFW) provides comprehensive security with application awareness, integrated intrusion prevention, and cloud-delivered threat intelligence.
+                </p>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Rising sophisticated attacks targeting network perimeter
+                    </li>
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Need for application-level visibility and control
+                    </li>
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Compliance requirements (PCI-DSS, ISO 27001)
+                    </li>
+                    <li style="padding: 10px 0 10px 25px; position: relative; color: var(--text-secondary);">
+                        <span style="position: absolute; left: 0; color: var(--accent);">▹</span>
+                        Consolidation of multiple security functions
+                    </li>
+                </ul>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;"> Implementation Objectives</h3>
+                <div class="phase-card">
+                    <h3>Network Segmentation</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Implement zone-based security with proper network segmentation (DMZ, LAN, WAN).</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Application Control</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Deploy application-aware firewall policies to control bandwidth and access.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Threat Prevention</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Enable IPS, Antivirus, Web Filtering, and Application Control profiles.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>SSL Inspection</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Implement SSL/TLS deep inspection for encrypted traffic analysis.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>Logging & Reporting</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Configure comprehensive logging and real-time threat monitoring.</p>
+                </div>
+            </section>
+
+            <!-- 02 NGFW Features -->
+            <section class="section">
+                <h2>02 — Fortigate NGFW Security Features</h2>
+                <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 30px;">
+                    FortiGate Next-Generation Firewall provides multiple layers of security inspection and threat prevention capabilities.
+                </p>
+
+                <div class="security-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Intrusion Prevention (IPS)</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em;">Real-time detection and blocking of network-based attacks, exploits, and vulnerabilities.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Antivirus & Malware</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em;">Advanced malware protection with FortiGuard Labs real-time threat intelligence.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Web Filtering</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em;">URL filtering, category-based blocking, and safe search enforcement.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3>Application Control</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em;">Identify and control thousands of applications regardless of port or protocol.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>SSL Inspection</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em;">Deep inspection of encrypted HTTPS traffic to detect hidden threats.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Advanced Threat Protection</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95em;">Sandboxing and FortiSandbox integration for zero-day threat detection.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 03 Network Topology -->
+            <section class="section">
+                <h2>03 — Network Architecture & Topology</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Network Segmentation</h3>
+                <div class="topology-diagram">
+┌─────────────────────────────────────────────────────────┐
+│                      INTERNET                           │
+│                   (Untrusted Zone)                      │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                ┌────▼────┐
+                │  ISP    │
+                │ Router  │
+                └────┬────┘
+                     │
+            ┌────────▼────────┐
+            │   FORTIGATE     │
+            │     60F NGFW    │
+            │                 │
+            │  ┌───────────┐  │
+    ┌─────────┤ WAN (port1)│  │
+    │         │ x.x.x.x   │  │
+    │         └───────────┘  │
+    │         ┌───────────┐  │
+    ├─────────┤ LAN (port2)├───────────┐
+    │         │ 10.10.10.1│  │         │
+    │         ───────────┘  │         │
+    │         ┌───────────┐  │         │
+    └─────────┤ DMZ (port3)├──┘         │
+              │ 192.168.1.1│            │
+              └───────────┘            │
+                     │                  │
+            ┌────────▼────────┐  ┌─────▼─────┐
+            │  INTERNAL LAN   │  │   DMZ     │
+            │  10.10.10.0/24  │  │ 192.168.1 │
+            │                 │  │ .0/24     │
+            │ • Workstations  │  │           │
+            │ • Servers       │  │ • Web Srv │
+            │ • AD Domain     │  │ • Mail Srv│
+            └─────────────────┘  └───────────┘
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">Interface Configuration</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Interface</th>
+                            <th>IP Address</th>
+                            <th>Zone</th>
+                            <th>Security Level</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>port1 (WAN)</strong></td>
+                            <td>x.x.x.x /28</td>
+                            <td>WAN</td>
+                            <td>Untrusted</td>
+                            <td>Internet Uplink</td>
+                        </tr>
+                        <tr>
+                            <td><strong>port2 (LAN)</strong></td>
+                            <td>10.10.10.1 /24</td>
+                            <td>LAN</td>
+                            <td>Trusted</td>
+                            <td>Internal Network</td>
+                        </tr>
+                        <tr>
+                            <td><strong>port3 (DMZ)</strong></td>
+                            <td>192.168.1.1 /24</td>
+                            <td>DMZ</td>
+                            <td>Semi-Trusted</td>
+                            <td>Public Servers</td>
+                        </tr>
+                        <tr>
+                            <td><strong>port4 (MGMT)</strong></td>
+                            <td>10.10.99.1 /24</td>
+                            <td>MGMT</td>
+                            <td>Restricted</td>
+                            <td>Management Network</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 04 Security Policies -->
+            <section class="section">
+                <h2>04 — Security Policies Configuration</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Policy Overview</h3>
+                <p style="font-size: 1.1em; color: var(--text-secondary); margin-bottom: 20px;">
+                    Total of 24 security policies configured with specific rules for each traffic flow between zones.
+                </p>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">Key Security Policies</h3>
+                
+                <div class="phase-card">
+                    <h3>Policy #1: LAN to Internet (Outbound)</h3>
+                    <table class="policy-table">
+                        <tr><td><strong>Name</strong></td><td>LAN_TO_INTERNET</td></tr>
+                        <tr><td><strong>Source</strong></td><td>10.10.10.0/24 (LAN subnet)</td></tr>
+                        <tr><td><strong>Destination</strong></td><td>all</td></tr>
+                        <tr><td><strong>Service</strong></td><td>HTTP, HTTPS, DNS, SSH, RDP</td></tr>
+                        <tr><td><strong>Action</strong></td><td><span class="badge badge-allow">ALLOW</span></td></tr>
+                        <tr><td><strong>NAT</strong></td><td>Enabled (Source NAT)</td></tr>
+                        <tr><td><strong>UTM Profiles</strong></td><td>IPS, AV, Web Filter, App Control</td></tr>
+                        <tr><td><strong>SSL Inspection</strong></td><td>Deep Inspection</td></tr>
+                        <tr><td><strong>Log Allowed</strong></td><td>All Sessions</td></tr>
+                    </table>
+                </div>
+
+                <div class="phase-card">
+                    <h3>Policy #2: Internet to DMZ (Inbound)</h3>
+                    <table class="policy-table">
+                        <tr><td><strong>Name</strong></td><td>INTERNET_TO_DMZ_WEB</td></tr>
+                        <tr><td><strong>Source</strong></td><td>all (Internet)</td></tr>
+                        <tr><td><strong>Destination</strong></td><td>192.168.1.10 (Web Server)</td></tr>
+                        <tr><td><strong>Service</strong></td><td>HTTP (80), HTTPS (443)</td></tr>
+                        <tr><td><strong>Action</strong></td><td><span class="badge badge-allow">ALLOW</span></td></tr>
+                        <tr><td><strong>NAT</strong></td><td>Enabled (DNAT - Port Forwarding)</td></tr>
+                        <tr><td><strong>UTM Profiles</strong></td><td>IPS, WAF, AV</td></tr>
+                        <tr><td><strong>Log Allowed</strong></td><td>All Sessions</td></tr>
+                    </table>
+                </div>
+
+                <div class="phase-card">
+                    <h3>Policy #3: LAN to DMZ (Internal Access)</h3>
+                    <table class="policy-table">
+                        <tr><td><strong>Name</strong></td><td>LAN_TO_DMZ</td></tr>
+                        <tr><td><strong>Source</strong></td><td>10.10.10.0/24 (LAN)</td></tr>
+                        <tr><td><strong>Destination</strong></td><td>192.168.1.0/24 (DMZ)</td></tr>
+                        <tr><td><strong>Service</strong></td><td>HTTP, HTTPS, SSH, MySQL</td></tr>
+                        <tr><td><strong>Action</strong></td><td><span class="badge badge-allow">ALLOW</span></td></tr>
+                        <tr><td><strong>NAT</strong></td><td>Disabled</td></tr>
+                        <tr><td><strong>UTM Profiles</strong></td><td>IPS, AV</td></tr>
+                        <tr><td><strong>Log Allowed</strong></td><td>Security Events</td></tr>
+                    </table>
+                </div>
+
+                <div class="phase-card">
+                    <h3>Policy #4: Default Deny (Implicit)</h3>
+                    <table class="policy-table">
+                        <tr><td><strong>Name</strong></td><td>implicit_deny</td></tr>
+                        <tr><td><strong>Source</strong></td><td>all</td></tr>
+                        <tr><td><strong>Destination</strong></td><td>all</td></tr>
+                        <tr><td><strong>Service</strong></td><td>all</td></tr>
+                        <tr><td><strong>Action</strong></td><td><span class="badge badge-deny">DENY</span></td></tr>
+                        <tr><td><strong>Log Allowed</strong></td><td>Denied Traffic</td></tr>
+                    </table>
+                </div>
+
+                <div class="warning-box">
+                    <strong> Security Best Practice:</strong> All policies follow the principle of least privilege - only necessary services are allowed, and everything else is denied by default.
+                </div>
+            </section>
+
+            <!-- 05 UTM Configuration -->
+            <section class="section">
+                <h2>05 — UTM (Unified Threat Management) Profiles</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Security Profiles Configuration</h3>
+
+                <div class="phase-card">
+                    <h3>🛡️ IPS Profile: "default-strict"</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 15px;">
+                        Intrusion Prevention System configured with strict signature set to detect and block known exploits, malware, and attack patterns.
+                    </p>
+                    <ul class="checklist">
+                        <li class="checked">Critical & High severity signatures enabled</li>
+                        <li class="checked">Block mode for known exploits</li>
+                        <li class="checked">Protocol anomaly detection</li>
+                        <li class="checked">DoS/DDoS protection enabled</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <h3>🦠 Antivirus Profile: "av-profile-full"</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 15px;">
+                        Real-time antivirus scanning using FortiGuard Labs database with heuristic analysis for unknown threats.
+                    </p>
+                    <ul class="checklist">
+                        <li class="checked">Scan compressed files (up to 3 levels)</li>
+                        <li class="checked">Scan archives (ZIP, RAR, 7Z)</li>
+                        <li class="checked">Block infected files automatically</li>
+                        <li class="checked">FortiGuard real-time updates</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <h3> Web Filtering Profile: "web-filter-corporate"</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 15px;">
+                        Category-based URL filtering to block malicious and inappropriate websites.
+                    </p>
+                    <ul class="checklist">
+                        <li class="checked">Block: Malware, Phishing, Adult Content, Gambling</li>
+                        <li class="checked">Warn: Social Media, Streaming</li>
+                        <li class="checked">Allow: Business, Education, Technology</li>
+                        <li class="checked">Safe Search enforcement (Google, Bing)</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <h3> Application Control: "app-control-standard"</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 15px;">
+                        Identify and control applications regardless of port or protocol using deep packet inspection.
+                    </p>
+                    <ul class="checklist">
+                        <li class="checked">Block: P2P, Torrent, Proxy Avoidance</li>
+                        <li class="checked">Limit: Video Streaming (YouTube, Netflix)</li>
+                        <li class="checked">Allow: Business Apps (Office 365, Salesforce)</li>
+                        <li class="checked">Monitor: Social Media usage</li>
+                    </ul>
+                </div>
+
+                <div class="phase-card">
+                    <h3> SSL Inspection: "deep-inspection"</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 15px;">
+                        Deep SSL/TLS inspection to detect threats hidden in encrypted traffic.
+                    </p>
+                    <ul class="checklist">
+                        <li class="checked">Decrypt and inspect HTTPS traffic</li>
+                        <li class="checked">Certificate validation</li>
+                        <li class="checked">Block self-signed certificates</li>
+                        <li class="checked">Exclude: Banking, Healthcare (privacy)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 06 Implementation Steps -->
+            <section class="section">
+                <h2>06 — Implementation Steps</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Phase 1: Initial Setup</h3>
+                <div class="phase-card">
+                    <h3>1. Factory Reset & Firmware Update</h3>
+                    <div class="code-block">
+# Backup default config
+execute backup config flash factory-default.cfg
+
+# Update to latest firmware
+config system firmware
+    set path "https://support.fortinet.com"
+end
+execute restore image https://.../FortiGate-60F-v7.2.x.out
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <h3>2. Interface Configuration</h3>
+                    <div class="code-block">
+config system interface
+    edit "port1"
+        set mode static
+        set ip x.x.x.x 255.255.255.240
+        set allowaccess https ping
+        set description "WAN"
+    next
+    edit "port2"
+        set mode static
+        set ip 10.10.10.1 255.255.255.0
+        set allowaccess https ping
+        set description "LAN"
+    next
+    edit "port3"
+        set mode static
+        set ip 192.168.1.1 255.255.255.0
+        set description "DMZ"
+    next
+end
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">Phase 2: Security Policy Creation</h3>
+                <div class="phase-card">
+                    <h3>3. Create Address Objects</h3>
+                    <div class="code-block">
+config firewall address
+    edit "LAN_Subnet"
+        set subnet 10.10.10.0 255.255.255.0
+    next
+    edit "DMZ_Subnet"
+        set subnet 192.168.1.0 255.255.255.0
+    next
+    edit "Web_Server"
+        set subnet 192.168.1.10 255.255.255.255
+    next
+end
+                    </div>
+                </div>
+
+                <div class="phase-card">
+                    <h3>4. Create Security Policies</h3>
+                    <div class="code-block">
+config firewall policy
+    edit 1
+        set name "LAN_TO_INTERNET"
+        set srcintf "port2"
+        set dstintf "port1"
+        set srcaddr "LAN_Subnet"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "HTTP" "HTTPS" "DNS"
+        set nat enable
+        set utm-status enable
+        set ssl-ssh-profile "deep-inspection"
+        set av-profile "av-profile-full"
+        set webfilter-profile "web-filter-corporate"
+        set application-list "app-control-standard"
+        set ips-sensor "default-strict"
+        set logtraffic all
+    next
+end
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">Phase 3: Testing & Validation</h3>
+                <div class="phase-card">
+                    <h3>5. Policy Testing</h3>
+                    <ul class="checklist">
+                        <li class="checked">Verify LAN users can access internet</li>
+                        <li class="checked">Test web filtering (blocked categories)</li>
+                        <li class="checked">Validate IPS detection (EICAR test)</li>
+                        <li class="checked">Confirm NAT translation working</li>
+                        <li class="checked">Check DMZ server accessibility</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 07 Results & Monitoring -->
+            <section class="section">
+                <h2>07 — Results & Performance Metrics</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">Security Posture Improvement</h3>
+                <div class="info-grid" style="margin-bottom: 40px;">
+                    <div class="info-box">
+                        <div class="info-box-label">Threats Blocked</div>
+                        <div class="info-box-value">1,247</div>
+                        <div class="info-box-sub">First 30 Days</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Malware Detected</div>
+                        <div class="info-box-value">89</div>
+                        <div class="info-box-sub">AV Scanning</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Websites Blocked</div>
+                        <div class="info-box-value">342</div>
+                        <div class="info-box-sub">Web Filtering</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">Apps Controlled</div>
+                        <div class="info-box-value">156</div>
+                        <div class="info-box-sub">Application Control</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">IPS Attacks</div>
+                        <div class="info-box-value">234</div>
+                        <div class="info-box-sub">Prevented</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">SSL Sessions</div>
+                        <div class="info-box-value">8,923</div>
+                        <div class="info-box-sub">Inspected</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📊 Top Threat Categories Blocked</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Threat Category</th>
+                            <th>Count</th>
+                            <th>Action</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Malware & Viruses</strong></td>
+                            <td>89</td>
+                            <td>Blocked</td>
+                            <td style="color: #10b981;">✅ Protected</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Web Exploits</strong></td>
+                            <td>156</td>
+                            <td>Blocked</td>
+                            <td style="color: #10b981;">✅ Protected</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phishing URLs</strong></td>
+                            <td>234</td>
+                            <td>Blocked</td>
+                            <td style="color: #10b981;">✅ Protected</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Unauthorized Apps</strong></td>
+                            <td>67</td>
+                            <td>Blocked</td>
+                            <td style="color: #10b981;">✅ Controlled</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Botnet C&C</strong></td>
+                            <td>23</td>
+                            <td>Blocked</td>
+                            <td style="color: #10b981;">✅ Prevented</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success-box">
+                    <strong>✅ Implementation Successful!</strong> FortiGate NGFW is now actively protecting the network with comprehensive threat prevention, application control, and security policy enforcement.
+                </div>
+            </section>
+
+            <!-- 08 Conclusion -->
+            <section class="section">
+                <h2>08 — Conclusion & Best Practices</h2>
+                
+                <h3 style="color: var(--accent-light); margin: 30px 0 20px;">✅ Achievements</h3>
+                <ul class="checklist">
+                    <li class="checked">Comprehensive NGFW deployment with multi-layer security</li>
+                    <li class="checked">24 security policies configured with least privilege</li>
+                    <li class="checked">8 UTM profiles active (IPS, AV, Web Filter, App Control)</li>
+                    <li class="checked">SSL deep inspection enabled for encrypted traffic</li>
+                    <li class="checked">Network segmentation (WAN/LAN/DMZ/MGMT)</li>
+                    <li class="checked">Real-time threat intelligence from FortiGuard Labs</li>
+                    <li class="checked">Comprehensive logging and monitoring</li>
+                </ul>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">📝 Best Practices Implemented</h3>
+                <div class="info-grid" style="margin-top: 30px;">
+                    <div class="info-box">
+                        <div class="info-box-label">🔒</div>
+                        <div class="info-box-value">Default Deny</div>
+                        <div class="info-box-sub">Implicit deny all policy</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">🎯</div>
+                        <div class="info-box-value">Least Privilege</div>
+                        <div class="info-box-sub">Minimum required access</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">📊</div>
+                        <div class="info-box-value">Logging</div>
+                        <div class="info-box-sub">All sessions logged</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-label">🔄</div>
+                        <div class="info-box-value">Updates</div>
+                        <div class="info-box-sub">Auto-update enabled</div>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--accent-light); margin: 40px 0 20px;">🚀 Further Recommendations</h3>
+                <div class="phase-card">
+                    <h3>High Availability (HA)</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Deploy FortiGate in Active-Passive HA cluster for redundancy and failover protection.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>FortiAnalyzer Integration</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Centralized logging, reporting, and analytics with FortiAnalyzer.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>FortiSandbox</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Advanced threat protection with sandboxing for zero-day attacks.</p>
+                </div>
+                <div class="phase-card">
+                    <h3>SD-WAN</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7;">Implement SD-WAN for intelligent traffic routing and WAN optimization.</p>
+                </div>
+            </section>
+
+            <!-- Closing -->
+            <section class="section">
+                <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 2px solid var(--border);">
+                    <h2 style="color: var(--accent-light); margin-bottom: 20px;">️ Thank You</h2>
+                    <p style="font-size: 1.2em; color: var(--text-secondary); font-style: italic; margin-bottom: 30px;">
+                        "The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room with armed guards."
+                        <br>
+                        <span style="font-size: 0.9em; color: var(--text-muted);">— Gene Spafford</span>
+                    </p>
+                    
+                    <div style="background: var(--bg-card); padding: 30px; border-radius: 12px; border: 1px solid var(--border); margin: 30px auto; max-width: 600px;">
+                        <h3 style="color: var(--accent-light); margin-bottom: 20px;">📄 Portfolio Documentation</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.8; text-align: left;">
+                            <strong>Topic:</strong> Fortigate NGFW Security Policies<br>
+                            <strong>Model:</strong> FortiGate 60F<br>
+                            <strong>Firmware:</strong> FortiOS v7.2.x<br>
+                            <strong>Security Features:</strong> IPS, AV, Web Filter, App Control, SSL Inspection<br>
+                            <strong>Policies:</strong> 24 Rules Configured<br>
+                            <strong>Date:</strong> September 2026
+                        </p>
+                    </div>
+
+                    <p style="color: var(--text-muted); margin-top: 40px;">
+                        🔒 Network Security  |  🛡️ Threat Prevention  |  📊 Next-Gen Firewall
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">© 2026 Asep Nurdin. IT Infrastructure & Network Security.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
